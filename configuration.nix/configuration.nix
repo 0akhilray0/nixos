@@ -35,6 +35,7 @@
     ./hardware-configuration.nix
   ];
 
+
   ############################################################
   # STORAGE & FILESYSTEM SUPPORT
   ############################################################
@@ -276,6 +277,7 @@
     fastfetch                      # System info display
     tree                           # Directory structure viewer
     efibootmgr                     # EFI boot manager
+
     
     # =========== SYSTEM TOOLS ===========
     brightnessctl                  # Control screen brightness
@@ -283,6 +285,15 @@
     
     # =========== TERMINAL EMULATOR ===========
     ghostty                        # Modern GPU-accelerated terminal
+
+    # =========== GAME SPECEFICS TWEAKS ===========
+    vulkan-tools                   # tool for testing vulkan
+    lutris                         # Open Source gaming platform for GNU/Linux
+    protonup-qt                    # Install and manage Proton-GE and Luxtorpeda for Steam and Wine-GE for Lutris 
+
+    # =========== The apps that I want to use ===========
+    pomodoro-gtk                   # pomodoro app
+
     
     # =========== LOGIN MANAGER ===========
     tuigreet                       # TUI greeter for greetd
@@ -311,16 +322,15 @@
     swww                           # Animated wallpaper daemon
     yazi                           # Terminal file manager
     wl-clipboard                   # Clipboard for Wayland
-    
+
     # =========== SCREENSHOT TOOLS ===========
     grim                           # Screenshot tool
     slurp                          # Region selector
     # Usage: grim -g "$(slurp)" screenshot.png
     
     # =========== NOTIFICATIONS ===========
-    dunst                          # Notification daemon
     libnotify                      # Send notifications from terminal
-    
+    swaynotificationcenter         # Notification demon for hyprland and my desktop
     
     # =========== FILE MANAGER (Thunar) ===========
     xfce.thunar                    # Main file manager
@@ -398,4 +408,3 @@
 # Thunar permission denied: Check systemctl --user status polkit-gnome-authentication-agent-1
 #
 # ============================================================
-
