@@ -7,7 +7,7 @@
 #
 # Documentation: https://fishshell.com/docs/current/
 # #######################################################################################
-
+set -g fish_greeting
 
 # ======================================================================================
 # INTERACTIVE MODE CHECK
@@ -57,6 +57,13 @@ alias nrd='sudo nixos-rebuild dry-build'
 # Edit Hyprland window manager configuration
 # Opens hyprland.conf in your home directory config folder
 alias hyprc='nvim ~/.config/hypr/hyprland.conf'
+
+# ======================================================================================
+# FISH CONFIG SHORTCUT
+# ======================================================================================
+
+alias fishc='sudo nvim .config/fish/config.fish'
+
 
 
 # ======================================================================================
