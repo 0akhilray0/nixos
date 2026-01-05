@@ -35,6 +35,13 @@
     ./hardware-configuration.nix
   ];
 
+  ############################################################
+  # Import hardware-specific configuration
+  ############################################################
+  hardware.graphics = {
+  enable = true;
+  enable32Bit = true;  # Critical for Wine/Proton games
+};
 
   ############################################################
   # STORAGE & FILESYSTEM SUPPORT
@@ -277,6 +284,7 @@
     fastfetch                      # System info display
     tree                           # Directory structure viewer
     efibootmgr                     # EFI boot manager
+    unrar                          # archive manager
 
     
     # =========== SYSTEM TOOLS ===========
@@ -293,6 +301,9 @@
 
     # =========== The apps that I want to use ===========
     pomodoro-gtk                   # pomodoro app
+    motrix                         # Download manager
+    cava                           # Audio visualizer
+    mpv                            # Video player
 
     
     # =========== LOGIN MANAGER ===========
