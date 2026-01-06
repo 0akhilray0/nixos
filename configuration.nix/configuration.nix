@@ -36,12 +36,12 @@
   ];
 
   ############################################################
-  # Import hardware-specific configuration
+  # GRAPHICS HARDWARE
   ############################################################
   hardware.graphics = {
-  enable = true;
-  enable32Bit = true;  # Critical for Wine/Proton games
-};
+    enable = true;
+    enable32Bit = true;  # Critical for Wine/Proton games
+  };
 
   ############################################################
   # STORAGE & FILESYSTEM SUPPORT
@@ -50,9 +50,7 @@
   services.gvfs.enable = true;
   services.devmon.enable = true;
 
-
   boot.supportedFilesystems = [ "ntfs" ];
-
 
   ############################################################
   # BOOTLOADER
@@ -62,12 +60,67 @@
     enable = true;
     device = "nodev";              # "nodev" for UEFI systems
     efiSupport = true;             # Enable UEFI booting
-      };
+  };
   boot.loader.efi = {
     canTouchEfiVariables = true;
     efiSysMountPoint = "/boot";
   };
- 
+
+
+  ############################################################
+  # PLYMOUTH BOOT SPLASH
+  ############################################################
+  # Plymouth replaces systemd boot messages with a graphical
+  # boot animation/logo during startup and shutdown.
+  #
+  # Current theme: abstract_ring (animated ring)
+  # Theme source: adi1090x collection (80+ themes available)
+  # Browse themes: https://github.com/adi1090x/plymouth-themes
+  #
+  # To switch themes:
+  # 1. Change the "theme" line below
+  # 2. Add new theme name to "selected_themes" list
+  # 3. Run: nrs
+  ############################################################
+  
+  boot.plymouth = {
+    enable = true;                    # Enable Plymouth boot splash
+    theme = "cross_hud";          # Active theme name
+    themePackages = with pkgs; [
+      (adi1090x-plymouth-themes.override {
+        selected_themes = [ "cross_hud" ];  # Only download these themes
+      })
+    ];
+  };
+
+  ############################################################
+  # SILENT BOOT CONFIGURATION
+  ############################################################
+  # Hides systemd messages and boot logs to show only the
+  # Plymouth animation for a clean boot experience.
+  ############################################################
+  
+  boot.consoleLogLevel = 0;           # Suppress kernel messages
+  boot.initrd.verbose = false;        # Hide initrd messages
+  
+  # Graphics driver for Plymouth (Intel UHD 605 on D330)
+  boot.initrd.kernelModules = [ "i915" ];
+  
+  # Kernel parameters for silent boot
+  boot.kernelParams = [
+    "quiet"                           # Suppress most messages
+    "splash"                          # Enable splash screen
+    "boot.shell_on_fail"              # Emergency shell if boot fails
+    "udev.log_level=0"                # Suppress udev messages
+    "rd.systemd.show_status=auto"     # Hide systemd status
+    "rd.udev.log_level=3"             # Minimal udev logging
+  ];
+  
+  ############################################################
+  # END PLYMOUTH CONFIGURATION
+  ############################################################
+
+
   ############################################################
   # NETWORKING
   ############################################################
@@ -103,34 +156,23 @@
   programs.fish.enable = true;
 
   ############################################################
-  # DISPLAY SERVER & WINDOW MANAGER
+  # HYPRLAND - PRIMARY DESKTOP (ALWAYS ENABLED)
   ############################################################
-  # Enable X11 for XWayland compatibility
-  services.xserver = {
-    enable = false;
-    
-    # Keyboard layout
-    xkb = {
-      layout = "us";               # US keyboard layout
-    };
-    
-    # Exclude xterm (we don't want it as fallback)
-    excludePackages = [ pkgs.xterm ];
-  };
-  
-  # Hyprland: Modern Wayland compositor
+  # Hyprland: Modern Wayland tiling compositor
+  # This is your main daily driver desktop environment
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;        # Enable XWayland for legacy X11 apps
   };
 
   ############################################################
-  # LOGIN MANAGER (DISPLAY MANAGER)
+  # DISPLAY MANAGER - GREETD (FOR HYPRLAND)
   ############################################################
   # greetd: Lightweight login manager
   # tuigreet: Terminal UI greeter (minimal, fast)
+  # NOTE: Comment this out when testing other desktops below
   services.greetd = {
-    enable = true;
+    enable = false;
     settings = {
       default_session = {
         command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd Hyprland";
@@ -217,7 +259,7 @@
   # Set for ALL users at login
   environment.sessionVariables = {
     # Cursor theme settings (MUST be environment variables for Wayland)
-    XCURSOR_THEME = "Vanilla-DMZ";
+    XCURSOR_THEME = "Adwaita";
     XCURSOR_SIZE = "24";
     
     # Tell Electron/Chromium apps to use Wayland
@@ -278,6 +320,7 @@
     # =========== TERMINAL UTILITIES ===========
     neovim                         # Modern Vim (text editor)
     git                            # Version control
+    fzf                            # A very good listing tool for terminal
     wget                           # Download files
     curl                           # Transfer data with URLs
     btop                           # System monitor
@@ -285,7 +328,7 @@
     tree                           # Directory structure viewer
     efibootmgr                     # EFI boot manager
     unrar                          # archive manager
-
+    ttyper                         # Typing test like experience
     
     # =========== SYSTEM TOOLS ===========
     brightnessctl                  # Control screen brightness
@@ -304,7 +347,6 @@
     motrix                         # Download manager
     cava                           # Audio visualizer
     mpv                            # Video player
-
     
     # =========== LOGIN MANAGER ===========
     tuigreet                       # TUI greeter for greetd
@@ -391,6 +433,72 @@
   };
 
   ############################################################
+  # DESKTOP ENVIRONMENTS - EXPERIMENT AREA
+  ############################################################
+  # Uncomment desktops below to test them alongside Hyprland
+  # HOW TO USE:
+  #   1. Comment out the greetd section above (line 147-155)
+  #   2. Uncomment services.xserver.enable and SDDM below
+  #   3. Uncomment any desktop(s) you want to try
+  #   4. Run: sudo nixos-rebuild switch
+  #   5. SDDM will show all enabled desktops in session menu
+  #
+  # CONFLICTS TO AVOID:
+  #   - Don't enable GNOME + Pantheon together (conflict)
+  #   - Don't enable multiple display managers (choose one: greetd OR sddm OR gdm)
+  #
+  # Source: https://wiki.nixos.org/wiki/Category:Desktop_environment
+  ############################################################
+
+  # X Server (required for X11 desktops, enable when testing DEs)
+ services.xserver.enable = true;
+ services.xserver.xkb.layout = "us";  # Keyboard layout
+
+  # Display Manager - SDDM (works with all DEs, uncomment when testing)
+   services.displayManager.gdm.enable = true;
+
+  # ===== WAYLAND DESKTOPS =====
+
+  # KDE Plasma 6 (modern, feature-rich, Wayland/X11)
+  # services.desktopManager.plasma6.enable = true;
+
+  # GNOME (modern, clean, primarily Wayland)
+  # services.xserver.desktopManager.gnome.enable = true;
+
+
+  # COSMIC (PopOS new DE - experimental, requires flakes)
+  # Currently not in stable NixOS 25.11
+  # services.desktopManager.cosmic.enable = true;
+
+  # ===== X11 DESKTOPS (LIGHTWEIGHT) =====
+
+  # XFCE (lightweight, stable, Windows-like - RECOMMENDED for 4GB RAM)
+  # services.xserver.desktopManager.xfce.enable = true;
+
+  # LXQt (ultra-lightweight Qt-based)
+  # services.xserver.desktopManager.lxqt.enable = true;
+
+  # MATE (classic GNOME 2 fork, lightweight)
+  # services.xserver.desktopManager.mate.enable = true;
+
+
+  # ===== X11 DESKTOPS (MODERN) =====
+
+  # Cinnamon (Linux Mint default, Windows-like)
+  # services.xserver.desktopManager.cinnamon.enable = true;
+
+  # Budgie (modern, elegant, similar to GNOME)
+  # services.xserver.desktopManager.budgie.enable = true;
+
+
+  # Pantheon (elementary OS default, macOS-like)
+  # WARNING: Conflicts with GNOME! Don't enable both.
+  # services.xserver.desktopManager.pantheon.enable = true;
+
+
+
+
+  ############################################################
   # SYSTEM STATE VERSION
   ############################################################
   # WARNING: NEVER CHANGE THIS AFTER INSTALLATION!
@@ -410,12 +518,15 @@
 # Change GTK theme:       nwg-look
 # Clean old generations:  sudo nix-collect-garbage -d
 #
-# TROUBLESHOOTING:
+# TESTING DESKTOPS:
 #
-# Waybar icons missing:   Use Nerd Font in waybar config
-# GTK theme not working:  Run nwg-look
-# Black screen on login:  Ctrl+Alt+F2, sudo systemctl restart greetd
-# No audio:               nix-shell -p pavucontrol (then check audio)
-# Thunar permission denied: Check systemctl --user status polkit-gnome-authentication-agent-1
+# (recommended first):
+#   1. Comment out greetd section (lines 147-155)
+#   2. Uncomment: services.xserver.enable (line 522)
+#   3. Uncomment: services.displayManager.sddm.enable (line 526)
+#   4. Uncomment: services.xserver.desktopManager.xfce.enable (line 545)
+#   5. sudo nixos-rebuild switch
+#   6. SDDM will show: Hyprland + XFCE in session menu
 #
 # ============================================================
+
