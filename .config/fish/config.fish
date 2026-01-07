@@ -4,7 +4,11 @@
 # User: akhil
 # Shell: Fish (Friendly Interactive Shell)
 # System: NixOS 25.11
-#
+
+
+#For setting the nivm confg to root things 
+set -x SUDO_EDITOR nvim
+
 # Documentation: https://fishshell.com/docs/current/
 # #######################################################################################
 set -g fish_greeting
