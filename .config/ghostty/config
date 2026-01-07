@@ -1,52 +1,79 @@
-# This is the configuration file for Ghostty.
-#
-# This template file has been automatically created at the following
-# path since Ghostty couldn't find any existing config files on your system:
-#
-#   /home/akhil/.config/ghostty/config
-#
-# The template does not set any default options, since Ghostty ships
-# with sensible defaults for all options. Users should only need to set
-# options that they want to change from the default.
-#
-# Run `ghostty +show-config --default --docs` to view a list of
-# all available config options and their default values.
-#
-# Additionally, each config option is also explained in detail
-# on Ghostty's website, at https://ghostty.org/docs/config.
-#
-# Ghostty can reload the configuration while running by using the menu
-# options or the bound key (default: Command + Shift + comma on macOS and
-# Control + Shift + comma on other platforms). Not all config options can be
-# reloaded while running; some only apply to new windows and others may require
-# a full restart to take effect.
+# =============================================================================
+# Ghostty Terminal Configuration - Retro Black & Orange Theme
+# =============================================================================
 
-# Config syntax crash course
-# ==========================
-# # The config file consists of simple key-value pairs,
-# # separated by equals signs.
-# font-family = Iosevka
-# window-padding-x = 2
-#
-# # Spacing around the equals sign does not matter.
-# # All of these are identical:
-# key=value
-# key= value
-# key =value
-# key = value
-#
-# # Any line beginning with a # is a comment. It's not possible to put
-# # a comment after a config option, since it would be interpreted as a
-# # part of the value. For example, this will have a value of "#123abc":
-# background = #123abc
-#
-# # Empty values are used to reset config keys to default.
-# key =
-#
-# # Some config options have unique syntaxes for their value,
-# # which is explained in the docs for that config option.
-# # Just for example:
-# resize-overlay-duration = 4s 200ms
+# Font Configuration
+# VT323 gives authentic 1980s Unix terminal look
+font-family = VT323
+font-size = 11
+
+# Background Settings
+# Keep your preferred transparency
 background-opacity = 0.7
-theme = Black Metal
+
+# Window Padding
+window-padding-x = 8
+window-padding-y = 8
+
+# =============================================================================
+# RETRO THEME: Pure Black Background with Orange/Green Accents
+# =============================================================================
+
+# Base Colors
+background = #000000
+foreground = #ff8800
+
+# Cursor (retro green phosphor style)
+cursor-color = #00ff00
+cursor-text = #000000
+
+# Selection
+selection-background = #331a00
+selection-foreground = #ff8800
+
+# =============================================================================
+# 16 Color Palette - Retro Terminal Style
+# =============================================================================
+
+# Black
+palette = 0=#000000
+palette = 8=#1a1a1a
+
+# Red/Orange (primary accent color - dark orange/amber)
+palette = 1=#cc6600
+palette = 9=#ff8800
+
+# Green (retro phosphor accent)
+palette = 2=#00aa00
+palette = 10=#00ff00
+
+# Yellow/Amber (vintage terminal vibe)
+palette = 3=#ff9900
+palette = 11=#ffaa00
+
+# Blue
+palette = 4=#0066cc
+palette = 12=#3399ff
+
+# Magenta
+palette = 5=#aa00aa
+palette = 13=#ff00ff
+
+# Cyan (secondary retro green)
+palette = 6=#00aaaa
+palette = 14=#00ffff
+
+# White/Gray
+palette = 7=#aaaaaa
+palette = 15=#ffffff
+
+# =============================================================================
+# Optional Settings
+# =============================================================================
+
+# Hide mouse cursor while typing
+mouse-hide-while-typing = true
+
+# Copy to clipboard on selection
+copy-on-select = clipboard
 
