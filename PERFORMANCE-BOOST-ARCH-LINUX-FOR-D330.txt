@@ -1,0 +1,60 @@
+Here is the simplified, step-by-step guide to unlocking your CPU's 2.60 GHz speed on a fresh Arch Linux install. This method avoids touching GRUB and uses the system's built-in file rules.
+1. Install the Tool
+
+First, get the package that manages CPU power.
+Bash
+
+sudo pacman -S cpupower
+
+2. Force the "Performance" Governor
+
+Create the config file so the system always aims for max speed.
+Bash
+
+echo "governor='performance'" | sudo tee /etc/default/cpupower
+
+3. The "Hardware Unlock" (Active Mode & Turbo)
+
+This is the most important part. We create a single file that tells the kernel to:
+
+    Switch the driver to "Active" mode (so it can see the higher speeds).
+
+    Turn off the "No Turbo" restriction (so it can hit 2.60 GHz).
+
+Run this command to create the combined rule:
+Bash
+
+sudo tee /etc/tmpfiles.d/cpu_performance.conf <<EOF
+w /sys/devices/system/cpu/intel_pstate/status - - - - active
+w /sys/devices/system/cpu/intel_pstate/no_turbo - - - - 0
+EOF
+
+4. Enable the Service
+
+Turn everything on so it starts automatically every time you boot.
+Bash
+
+sudo systemctl enable --now cpupower
+
+How to verify it's working
+
+Run this command:
+Bash
+
+cpupower frequency-info
+
+Check for these 3 things:
+
+    Driver: intel_pstate
+
+    Hardware limits: ... - 2.60 GHz
+
+    Current CPU frequency: (Should be near 2.50+ GHz under load)
+
+Bonus: Graphics Drivers
+
+Since you mentioned graphics support earlier, here is the one-liner for a fresh Intel system:
+
+sudo pacman -S mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver libva-intel-driver
+
+

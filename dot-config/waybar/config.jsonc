@@ -1,0 +1,246 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 25,
+    "spacing": 2,
+    "margin-top": 1,
+    "margin-bottom": 2,
+    "margin-left": 5,
+    "margin-right": 5,
+
+    "modules-left": ["niri/workspaces","niri/window"],
+
+    "modules-center": [],
+
+    "modules-right": [
+        "custom/pomodoro",
+        "pulseaudio",
+        "backlight",
+        "group/nightmode",
+        "network",
+        "cpu",
+        "memory",
+        "disk",
+        "battery",
+        "clock",
+        "tray",
+        "group/power"
+    ],
+
+    "custom/pomodoro": {
+        "format": "{}",
+        "return-type": "json",
+        "exec": "/home/akhil/.config/waybar/POMODORO/pomodoro -w 45 -s 10 -l 15 --autow",
+        "on-click": "/home/akhil/.config/waybar/POMODORO/pomodoro toggle",
+        "on-click-right": "~/.local/bin/pomodoro reset"
+    },
+
+    "niri/workspaces": {
+        "format": "{icon}",
+        "on-click": "activate",
+        "all-outputs": true,
+        "persistent-workspaces": {
+            "*": 0
+        },
+        "format-icons": {
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4",
+            "5": "5",
+            "6": "6",
+            "7": "7",
+            "8": "8",
+            "9": "9",
+            "default": "" 
+        }
+    },
+
+    "niri/window": {
+    "format": "{}",
+    "max-length": 80,
+    "separate-outputs": true,
+    "rewrite": {
+        "(.*) — Mozilla Firefox": "󰈹 $1",
+        "(.*) - Mozilla Firefox": "󰈹 $1",
+        "(.*) - kitty": " $1",
+        "(.*) - Yazi": " $1"
+       }
+    },
+ 
+    "custom/updates": {
+        "format": "󰚰 {}",
+        "exec": "checkupdates | wc -l",
+        "interval": 3600,
+        "on-click": "kitty -e sudo pacman -Syu",
+        "signal": 8
+    },
+
+    "clock": {
+        "format": "󰥔 {:%I:%M %p}",
+        "format-alt": "󰃮 {:%Y-%m-%d}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+
+    "cpu": {
+        "format": "󰻠 {usage}%",
+        "format-alt": "󰻠 {avg_frequency} GHz",
+        "interval": 2,
+        "on-click": "kitty -e btop",
+        "tooltip-format": "CPU Usage: {usage}%\nFrequency: {avg_frequency} GHz"
+    },
+
+    "memory": {
+        "format": "󰍛 {used:0.1f}G",
+        "format-alt": "󰍛 {percentage}%",
+        "interval": 2,
+        "on-click": "kitty -e btop",
+        "tooltip-format": "RAM: {used:0.1f}GB / {total:0.1f}GB\nUsage: {percentage}%"
+    },
+
+    "temperature": {
+        "critical-threshold": 80,
+        "format": "{icon} {temperatureC}°C",
+        "format-icons": ["󱃃", "󰔏", "󱃂"],
+        "on-click": "kitty -e s-tui"
+    },
+
+    "battery": {
+        "states": { "good": 95, "warning": 30, "critical": 15 },
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": "󰚥 {capacity}%",
+        "format-alt": "{icon} {time}",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+    },
+
+    "network": {
+        "format-wifi": "󰖩 {signalStrength}%",
+        "format-ethernet": "󰈀 Connected",
+        "format-disconnected": "󰖪 Offline",
+        "format-alt": "󰩟 {ipaddr}",
+        "on-click": "kitty -e nmtui",
+        "tooltip-format-wifi": "SSID: {essid}\nSignal: {signalStrength}%\nIP: {ipaddr}",
+        "tooltip-format-ethernet": "Connection: {ifname}\nIP: {ipaddr}"
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰝟 Muted",
+        "format-icons": { 
+            "default": ["󰕿", "󰖀", "󰕾"] 
+        },
+        "on-click": "pavucontrol",
+        "tooltip-format": "Volume: {volume}%"
+    },
+
+    "backlight": {
+        "format": "{icon} {percent}%",
+        "format-icons": ["󰃞", "󰃟", "󰃠"],
+        "on-scroll-up": "brightnessctl set +5%",
+        "on-scroll-down": "brightnessctl set 5%-",
+        "tooltip-format": "Brightness: {percent}%"
+    },
+
+    "group/nightmode": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 300,
+            "children-class": "not-nightmode-main",
+            "transition-left-to-right": false
+        },
+        "modules": [
+            "custom/nightmode-main",
+            "custom/nightmode-off",
+            "custom/nightmode-1",
+            "custom/nightmode-2",
+            "custom/nightmode-3",
+            "custom/nightmode-4",
+            "custom/nightmode-5",
+            "custom/nightmode-6"
+        ]
+    },
+
+    "custom/nightmode-main": {
+        "format": "󰖔",
+        "tooltip": true,
+        "tooltip-format": "Night Mode Controls"
+    },
+
+    "custom/nightmode-off": {
+        "format": "󰖨",
+        "tooltip": true,
+        "tooltip-format": "Turn Off Night Mode",
+        "on-click": "pkill -9 gammastep"
+    },
+
+    "custom/nightmode-1": {
+        "format": "󰛨",
+        "tooltip": true,
+        "tooltip-format": "Daylight (6500K)",
+        "on-click": "pkill gammastep; gammastep -O 6500"
+    },
+
+    "custom/nightmode-2": {
+        "format": "󰖜",
+        "tooltip": true,
+        "tooltip-format": "Cool (5500K)",
+        "on-click": "pkill gammastep; gammastep -O 5500"
+    },
+
+    "custom/nightmode-3": {
+        "format": "󰖙",
+        "tooltip": true,
+        "tooltip-format": "Neutral (4500K)",
+        "on-click": "pkill gammastep; gammastep -O 4500"
+    },
+
+    "custom/nightmode-4": {
+        "format": "󰖕",
+        "tooltip": true,
+        "tooltip-format": "Warm (3500K)",
+        "on-click": "pkill gammastep; gammastep -O 3500"
+    },
+
+    "custom/nightmode-5": {
+        "format": "󰖔",
+        "tooltip": true,
+        "tooltip-format": "Very Warm (2500K)",
+        "on-click": "pkill gammastep; gammastep -O 2500"
+    },
+
+    "custom/nightmode-6": {
+        "format": "󰽥",
+        "tooltip": true,
+        "tooltip-format": "Campfire (1500K)",
+        "on-click": "pkill gammastep; gammastep -O 1500"
+    },
+
+    "disk": {
+        "interval": 30,
+        "format": "󰋊 {percentage_used}%",
+        "format-alt": "󰋊 {used}",
+        "path": "/",
+        "on-click": "kitty -e gdu /",
+        "tooltip-format": "Used: {used} / {total}\nUsage: {percentage_used}%"
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 8
+    },
+
+    "group/power": {
+        "orientation": "inherit",
+        "modules": [
+            "custom/power"
+        ]
+    },
+
+    "custom/power": {
+        "format": "➕", 
+        "tooltip": true,
+        "tooltip-format": "Power Menu",
+        "on-click": "bash /home/akhil/.config/rofi/powermenu.sh"
+    }
+}
